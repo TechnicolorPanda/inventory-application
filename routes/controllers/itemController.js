@@ -1,7 +1,20 @@
 var Item = require('../models/item');
+var Category = require('..models/category');
+
+var async = require('async');
 
 exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Site Home Page');
+
+  async.parallel({
+    item_count: function(callback) {
+      Item.countDocuments({}, callback);
+    },
+    category_count: function(callback) {
+      Category.countDocuments({}, callback);
+    }
+  }, function(err, results) {
+    res.render('index', { title: 'Loophaven Loft', error: err, data: results })
+  })
 };
 
 // Display list of all items.
