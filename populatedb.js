@@ -37,7 +37,6 @@ function itemCreate(pattern, description, price, url, category) {
     pattern: pattern,
     description: description,
     price: price,
-    url: url
   }
   if (category != false) itemdetail.category = category
     
@@ -60,7 +59,6 @@ function createItems(cb) {
             '3212 Socks', 
             'Simple ribbed socks knit from cotton yarn.', 
             'Free', 
-            'https://www.ravelry.com/patterns/library/3212-socks', 
             [categories[0],],
             callback
           );
@@ -70,7 +68,6 @@ function createItems(cb) {
             'Except for a Mouse Ornament', 
             'A Christmas ornament of a mouse in a tea cup.', 
             '$1.99',
-            'https://www.ravelry.com/patterns/library/except-for-a-mouse-ornament',
             [categories[0],], 
             callback
           );
@@ -80,7 +77,6 @@ function createItems(cb) {
             'Bohemian Afghan', 
             'A heavy scrap afghan knit in the round with no purling necessary.',
             '$3.99', 
-            'https://www.ravelry.com/patterns/library/bohemian-afghan',
             [categories[0],], 
             callback);
         }
