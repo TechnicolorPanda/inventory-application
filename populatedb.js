@@ -32,7 +32,7 @@ function categoryCreate(name, cb) {
   }   );
 }
 
-function itemCreate(pattern, description, price, url, category) {
+function itemCreate(pattern, description, price, category) {
   itemdetail = { 
     pattern: pattern,
     description: description,
@@ -48,7 +48,7 @@ function itemCreate(pattern, description, price, url, category) {
     }
     console.log('New Pattern: ' + item);
     items.push(item)
-    cb(null, book)
+    cb(null, item)
   }  );
 }
 
