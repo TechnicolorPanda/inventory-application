@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1 class = 'title'><%= title %></h1>
+    <div class = 'container-fluid'>
+    <%- include('layout') -%>
+    <div class = 'main-body'>
+      <ul>
+        <% if (item_list) { %>
+          <% item_list.map(item => { %>
+            <li><a href=item.url <%= item.pattern %></a>
+                |  <%= item.category.name %>
+                   <%= item.description %>
+                   <%= item.price %>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li>There are no patterns.</li>
+        <% } %>
+      </ul>
+    </div>
+    </div>
+  </body>
+</html>

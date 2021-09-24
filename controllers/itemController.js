@@ -29,8 +29,28 @@ exports.item_list = function(req, res, next) {
 };
 
 // Display detail page for a specific item.
-exports.item_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item detail: ' + req.params.id);
+exports.item_detail = function(req, res, next) {
+  async.parallel({
+    item: function(callback) {
+        Item.findById(req.params.id)
+          .exec(callback);
+    },
+
+    item_patterns: function(callback) {
+        Item.find({ 'item': req.params.id })
+          .exec(callback);
+    },
+
+}, function(err, results) {
+    if (err) { return next(err); }
+    if (results.item==null) { // No results.
+        var err = new Error('Genre not found');
+        err.status = 404;
+        return next(err);
+    }
+    // Successful, so render
+    res.render('item_detail', { title: 'Pattern Detail', item: results.item, item_patterns: item.item_patterns } );
+});
 };
 
 // Display item create form on GET.
