@@ -10,19 +10,19 @@
     <%- include('layout') -%>
     <div class = 'main-body'>
       <ul>
-        <% if (item_list) { %>
-          <% item_list.sort(function(a, b) { %>
-            <% let textA = a.pattern.toUpperCase(); %>
-            <% let textB = b.pattern.toUpperCase(); %>
+        <% if (category_list) { %>
+          <% category_list.sort(function(a, b) { %>
+            <% let textA = a.name.toUpperCase(); %>
+            <% let textB = b.name.toUpperCase(); %>
             <% return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; %>
           <% }); %>
-          <% item_list.map(item => { %>
-            <li><a href=item.url <%= item.pattern %></a>
-                |  <%= item.category.name %>
+          <% category_list.map(item => { %>
+            <li><a href=category.url <%= category.name %></a>
+                |  <%= category.name %>
             </li>
           <% }) %>
         <% } else { %>
-          <li>There are no patterns.</li>
+          <li>There are no categories.</li>
         <% } %>
       </ul>
     </div>
