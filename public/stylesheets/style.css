@@ -3,12 +3,46 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.container-fluid {
+  display: block;
+}
+
+.title {
+  height: 30px;
+  align-items: center;
+  text-align: center;
+}
+
+.link {
+  color: blue;
+}
+
+.col-sm-2 {
+  display: block;
 }
 
 .sidebar-nav {
+  width: 20%;
   margin-top: 20px;
   padding: 0;
   list-style: none;
 }
+
+ul {
+  display: block;
+}
+
+.main-body {
+  display: block;
+  width: 80%;
+  height: 100%;
+}
+
+hr {
+  display: block;
+  width: 100%;
+}
+
+
+
+

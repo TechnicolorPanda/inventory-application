@@ -5,16 +5,20 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <% if (error) { %>
-      <p>Error geting dynamic content.</p>
-    <% } else { %>
-      <p>The store has the following items:</p>
-    <% } %>
-    <ul>
-      <li>Patterns: <%= data.item_count %></li>
-      <li>Categories: <%= data.category_count %></li>
-    </ul>
-
+    <h1 class = 'title'><%= title %></h1>
+    <div class = 'container-fluid'>
+    <%- include('layout') -%>
+    <div class = 'main-body'>
+      <% if (error) { %>
+        <p>Error geting dynamic content.</p>
+      <% } else { %>
+        <p>The store has the following items:</p>
+      <% } %>
+      <ul>
+        <li>Patterns: <%= data.item_count %></li>
+        <li>Categories: <%= data.category_count %></li>
+      </ul>
+    </div>
+    </div>
   </body>
 </html>
