@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1 class = 'title'><%= title %></h1>
+    <div class = 'container-fluid'>
+    <%- include('layout') -%>
+    <div class = 'main-body'>
+      <form action = '' method = 'POST'>
+        <fieldset>
+          <legend>Pattern</legend>
+            <input
+              type="text"
+              name="pattern"
+              id="pattern._id"
+              maxlength="50"
+              value="<%= typeof category == 'undefined' ? '' : item.pattern %>"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Description</legend>
+          <input 
+            type = 'text'
+            name="description" 
+            id="description._id" 
+            maxlength="500"
+            value = item.description
+          </input>
+        </fieldset>
+        <fieldset>
+          <legend>Price</legend>
+          <input
+            type = 'text'
+            name = 'price'
+            id = 'price._id'
+            maxlength = '10'
+            value = item.price
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Category</legend>
+          <input
+            type = 'checkbox'
+            name = 'category'
+            id = 'category._id'
+            value = category._id
+            checked = 'category.checked'
+          </input>
+        </fieldset>
+        <button type = 'submit'>
+          Submit
+        </button>
+    </div>
+    </div>
+  </body>
+</html>

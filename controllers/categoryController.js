@@ -1,4 +1,5 @@
 var Category = require('../models/category');
+const { body,validationResult } = require('express-validator');
 
 // Display list of all category.
 exports.category_list = function(req, res, next) {

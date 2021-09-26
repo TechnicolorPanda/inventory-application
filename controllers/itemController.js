@@ -1,5 +1,6 @@
 var Item = require('../models/item');
 var Category = require('../models/category');
+const { body,validationResult } = require('express-validator');
 
 var async = require('async');
 
@@ -33,6 +34,9 @@ exports.item_detail = function(req, res, next) {
   async.parallel({
     item: function(callback) {
         Item.findById(req.params.id)
+          .populate('description')
+          .populate('category')
+          .populate('price')
           .exec(callback);
     },
 
@@ -44,24 +48,97 @@ exports.item_detail = function(req, res, next) {
 }, function(err, results) {
     if (err) { return next(err); }
     if (results.item==null) { // No results.
-        var err = new Error('Genre not found');
+        var err = new Error('Pattern not found');
         err.status = 404;
         return next(err);
     }
     // Successful, so render
-    res.render('item_detail', { title: 'Pattern Detail', item: results.item, item_patterns: item.item_patterns } );
+    res.render('item_detail', { 
+      title: results.item.pattern, 
+      item: results.item, 
+      item_patterns: item.item_patterns 
+    } );
 });
 };
 
-// Display item create form on GET.
-exports.item_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item create GET');
+exports.item_create_get = function(req, res, next) {
+
+  // Get all authors and genres, which we can use for adding to our book.
+  async.parallel({
+      categories: function(callback) {
+          Category.find(callback);
+      },
+  }, function(err, results) {
+      if (err) { return next(err); }
+      res.render('item_form', { title: 'Create Pattern', categories: results.categories });
+  });
+
 };
 
-// Handle item create on POST.
-exports.item_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item create POST');
-};
+exports.item_create_post = [
+  // Convert the genre to an array.
+  (req, res, next) => {
+      if(!(req.body.category instanceof Array)){
+          if(typeof req.body.genre ==='undefined')
+          req.body.category = [];
+          else
+          req.body.category = new Array(req.body.category);
+      }
+      next();
+  },
+
+  // Validate and sanitise fields.
+  body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
+  body('category.*').escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+
+      // Extract the validation errors from a request.
+      const errors = validationResult(req);
+
+      // Create a Book object with escaped and trimmed data.
+      var book = new Book(
+        { title: req.body.title,
+          author: req.body.author,
+          summary: req.body.summary,
+          isbn: req.body.isbn,
+          genre: req.body.genre
+         });
+
+      if (!errors.isEmpty()) {
+          // There are errors. Render form again with sanitized values/error messages.
+
+          // Get all authors and genres for form.
+          async.parallel({
+              categories: function(callback) {
+                  Category.find(callback);
+              },
+          }, function(err, results) {
+              if (err) { return next(err); }
+
+              // Mark our selected genres as checked.
+              for (let i = 0; i < results.categories.length; i++) {
+                  if (item.category.indexOf(results.genres[i]._id) > -1) {
+                      results.categories[i].checked='true';
+                  }
+              }
+              res.render('item_form', { title: 'Create Pattern', categories:results.categories, item: item, errors: errors.array() });
+          });
+          return;
+      }
+      else {
+          // Data from form is valid. Save pattern.
+          item.save(function (err) {
+              if (err) { return next(err); }
+                 //successful - redirect to new book record.
+                 res.redirect(item.url);
+              });
+      }
+  }
+];
 
 // Display item delete form on GET.
 exports.item_delete_get = function(req, res) {
