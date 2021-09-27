@@ -27,7 +27,7 @@
             name="description" 
             id="description._id" 
             maxlength="500"
-            value = item.description
+            value = "<%= typeof category == 'undefined' ? '' : item.description %>"
           </input>
         </fieldset>
         <fieldset>
@@ -37,7 +37,7 @@
             name = 'price'
             id = 'price._id'
             maxlength = '10'
-            value = item.price
+            value = "<%= typeof category == 'undefined' ? '' : item.price %>"
           />
         </fieldset>
         <fieldset>
