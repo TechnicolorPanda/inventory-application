@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1 class = 'title'><%= title %></h1>
+    <div class = 'container-fluid'>
+    <%- include('layout') -%>
+    <div class = 'main-body'>
+      <ul>
+        <% if (item_list) { %>
+          <% item_list.map(item => { %>
+            <li><a href=category.url <%= category.name %></a>
+                   <%= category.description %>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li>There are no category.</li>
+        <% } %>
+      </ul>
+    </div>
+    </div>
+  </body>
+</html>

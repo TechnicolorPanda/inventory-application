@@ -58,9 +58,7 @@ exports.category_create_post =  [
              if (found_category) {
                // Category exists, redirect to its detail page.
                res.redirect(found_category.url);
-             }
-             else {
-  
+             } else {
                category.save(function (err) {
                  if (err) { return next(err); }
                  // Category saved. Redirect to category detail page.

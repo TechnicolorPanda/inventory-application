@@ -100,12 +100,12 @@ exports.item_create_post = [
       const errors = validationResult(req);
 
       // Create a Book object with escaped and trimmed data.
-      var book = new Book(
-        { title: req.body.title,
+      var book = new Item(
+        { pattern: req.body.pattern,
           author: req.body.author,
-          summary: req.body.summary,
-          isbn: req.body.isbn,
-          genre: req.body.genre
+          description: req.body.description,
+          price: req.body.price,
+          category: req.body.category
          });
 
       if (!errors.isEmpty()) {
