@@ -18,8 +18,11 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 var categories = []
 var items = []
 
-function categoryCreate(name, cb) {
-  var category = new Category({ name: name });
+function categoryCreate(name, description, cb) {
+  var category = new Category({ 
+    name: name,
+    description: description,
+   });
        
   category.save(function (err) {
     if (err) {
@@ -30,6 +33,14 @@ function categoryCreate(name, cb) {
     categories.push(category)
     cb(null, category);
   }   );
+}
+
+function createCategories(cb) {
+  async.series([
+      function(callback) {
+        categoryCreate('socks', 'All things foot', callback);
+      },
+  ], cb);
 }
 
 function itemCreate(pattern, description, price, category) {
@@ -78,10 +89,14 @@ function createItems(cb) {
             'A heavy scrap afghan knit in the round with no purling necessary.',
             '$3.99', 
             [categories[0],], 
-            callback);
-        }
-        ],
-        // optional callback
-        cb);
+            callback
+          );
+        },
+    ]);
 }
+
+async.series([
+  createCategories,
+  createItems
+])
 

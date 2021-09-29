@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
 
 var app = express();
-var mongoDB = `mongodb+srv://TechnicolorPanda:${password}@cluster0.xwtjz.mongodb.net/inventory-application?retryWrites=true&w=majority`;
+var mongoDB = `mongodb+srv://TechnicolorPanda:${password}@cluster0.kw3xd.mongodb.net/inventory_application?retryWrites=true&w=majority`;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
