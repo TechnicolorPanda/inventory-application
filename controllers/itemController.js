@@ -100,7 +100,7 @@ exports.item_create_post = [
       const errors = validationResult(req);
 
       // Create a Book object with escaped and trimmed data.
-      var book = new Item(
+      var item = new Item(
         { pattern: req.body.pattern,
           author: req.body.author,
           description: req.body.description,
@@ -133,7 +133,7 @@ exports.item_create_post = [
           // Data from form is valid. Save pattern.
           item.save(function (err) {
               if (err) { return next(err); }
-                 //successful - redirect to new book record.
+                 //successful - redirect to new item record.
                  res.redirect(item.url);
               });
       }

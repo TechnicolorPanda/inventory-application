@@ -14,12 +14,22 @@
           <legend>Add New Category</legend>
             <input
               type = 'text'
-              name = 'category'
-              id = 'category._id'
+              name = 'name'
+              id = 'name._id'
               maxlength = '20'
               value = "<%= typeof category == 'undefined' ? '' : category.name %>"
           />
         </fieldset>
+        <fieldset>
+            <legend>Description</legend>
+              <input
+                type = 'text'
+                name = 'description'
+                id = 'description._id'
+                maxlength = '20'
+                value = "<%= typeof category == 'undefined' ? '' : category.description %>"
+            />
+          </fieldset>
         <button type = 'submit'>
           Submit
         </button>

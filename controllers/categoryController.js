@@ -27,6 +27,7 @@ exports.category_create_post =  [
 
     // Validate and santize the name field.
     body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+    body('description', 'Description required').trim().isLength({ min: 1 }).escape(),
   
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -36,19 +37,19 @@ exports.category_create_post =  [
   
       // Create a genre object with escaped and trimmed data.
       var category = new Category(
-        { name: req.body.name }
+        { name: req.body.name },
+        { description: req.body.description },
       );
   
       if (!errors.isEmpty()) {
         // There are errors. Render the form again with sanitized values/error messages.
         res.render('category_form', { 
           title: 'Create Category', 
-        category: category, 
-        errors: errors.array()
+          category: category, 
+          errors: errors.array()
       });
       return;
-      }
-      else {
+      } else {
         // Data from form is valid.
         // Check if Category with same name already exists.
         Category.findOne({ 'name': req.body.name })
@@ -66,8 +67,7 @@ exports.category_create_post =  [
                });
   
              }
-  
-           });
+          });
       }
     }
   ];
