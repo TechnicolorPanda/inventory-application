@@ -1,5 +1,6 @@
 var Category = require('../models/category');
 const { body,validationResult } = require('express-validator');
+var async = require('async');
 
 // Display list of all category.
 exports.category_list = function(req, res, next) {
@@ -19,8 +20,16 @@ exports.category_detail = function(req, res) {
 
 // Display category create form on GET.
 exports.category_create_get = function(req, res, next) {
-    res.render('category_form', { title: 'Create Category' });
-  };
+      
+    async.parallel({
+        categories: function(callback) {
+            Category.find(callback);
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        res.render('category_form', { title: 'Create Category', categories: results.categories });
+    });
+};
 
 // Handle category create on POST.
 exports.category_create_post =  [
@@ -37,8 +46,8 @@ exports.category_create_post =  [
   
       // Create a genre object with escaped and trimmed data.
       var category = new Category(
-        { name: req.body.name },
-        { description: req.body.description },
+        { name: req.body.name,
+          description: req.body.description },
       );
   
       if (!errors.isEmpty()) {
