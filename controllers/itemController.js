@@ -20,14 +20,15 @@ exports.index = function(req, res) {
 
 // Display list of all items.
 exports.item_list = function(req, res, next) {
-  Item.find({}, 'pattern category')
-  .populate('pattern')
-  .exec(function (err, list_items) {
+
+  Item.find()
+  .sort([['pattern', 'ascending']])
+  .exec(function(err, list_items) {
     if (err) { return next(err); }
     //Successful, so render
     res.render('item_list', { title: 'Pattern List', item_list: list_items });
   });
-};
+}
 
 // Display detail page for a specific item.
 exports.item_detail = function(req, res, next) {
