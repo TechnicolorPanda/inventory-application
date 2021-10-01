@@ -5,7 +5,7 @@ var async = require('async');
 // Display list of all category.
 exports.category_list = function(req, res, next) {
   Category.find({}, 'name')
-  .populate('name')
+  .sort([['name', 'ascending']])
   .exec(function (err, list_categories) {
     if (err) { return next(err); }
     //Successful, so render

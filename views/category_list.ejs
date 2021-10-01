@@ -11,14 +11,9 @@
     <div class = 'main-body'>
       <ul>
         <% if (category_list) { %>
-          <% category_list.sort(function(a, b) { %>
-            <% let textA = a.name.toUpperCase(); %>
-            <% let textB = b.name.toUpperCase(); %>
-            <% return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; %>
-          <% }); %>
-          <% category_list.map(item => { %>
+          <% category_list.map(category => { %>
             <li><a href=category.url <%= category.name %></a>
-                |  <%= category.name %>
+              <%= category.name %>
             </li>
           <% }) %>
         <% } else { %>
@@ -29,3 +24,4 @@
     </div>
   </body>
 </html>
+
