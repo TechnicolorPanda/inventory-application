@@ -10,8 +10,8 @@
     <%- include('layout') -%>
     <div class = 'main-body'>
       <ul>
-        <% if (item_list) { %>
-          <% item_list.map(item => { %>
+        <% if (category_items) { %>
+          <% category_items.map(category => { %>
             <li><a href=category.url <%= category.name %></a>
                    <%= category.description %>
             </li>
