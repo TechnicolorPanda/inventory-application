@@ -9,7 +9,6 @@ var CategorySchema = new Schema(
   }
 );
 
-// Virtual for book's URL
 CategorySchema
 .virtual('url')
 .get(function() {

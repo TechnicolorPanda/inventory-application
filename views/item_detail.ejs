@@ -12,7 +12,7 @@
       <ul>
         <% if (item_list) { %>
           <% item_list.map(item => { %>
-            <li><a href=item.url <%= item.pattern %></a>
+            <li><a href= '<%= item.url %>' <%= item.pattern %></a>
                 |  <%= item.category.name %>
                    <%= item.description %>
                    <%= item.price %>

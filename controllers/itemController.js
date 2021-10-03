@@ -42,7 +42,7 @@ exports.item_detail = function(req, res, next) {
     },
 
     item_patterns: function(callback) {
-        Item.find({ 'item': req.params.id })
+        Item.find({ item: req.params.id })
           .exec(callback);
     },
 

@@ -12,7 +12,7 @@
       <ul>
         <% if (category_list) { %>
           <% category_list.map(category => { %>
-            <li><a href=category.url <%= category.name %></a>
+            <li><a href='<%= category.url %>'<%= category.name %></a>
               <%= category.name %>
             </li>
           <% }) %>

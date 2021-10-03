@@ -20,11 +20,12 @@ exports.category_list = function(req, res, next) {
     async.parallel({
         category: function(callback) {
             Category.findById(req.params.id)
+              .populate('categories')
               .exec(callback);
         },
 
         category_items: function(callback) {
-            Item.find({ 'category': req.params.id })
+            Item.find({ category: req.params.id })
               .exec(callback);
         },
 

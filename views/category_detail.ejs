@@ -12,8 +12,8 @@
       <ul>
         <% if (category_items) { %>
           <% category_items.map(category => { %>
-            <li><a href=category.url <%= category.name %></a>
-                   <%= category.description %>
+            <li><a href = '<%= item.url %>'<%= item.name %></a>
+                   <%= item.description %>
             </li>
           <% }) %>
         <% } else { %>
