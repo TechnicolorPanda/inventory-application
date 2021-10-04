@@ -5,15 +5,16 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1 class = 'title'><%= title %></h1>
+    <h1 class = 'title'><%= category.name %></h1>
     <div class = 'container-fluid'>
     <%- include('layout') -%>
     <div class = 'main-body'>
       <ul>
         <% if (category_items) { %>
-          <% category_items.map(category => { %>
-            <li><a href = '<%= item.url %>'<%= item.name %></a>
-                   <%= item.description %>
+          <% category_items.map(item => { %>
+            <li>
+              <p><a href = '<%= item.url %>'><%= item.pattern %></a></p>
+              <p><%= item.description %></p>
             </li>
           <% }) %>
         <% } else { %>

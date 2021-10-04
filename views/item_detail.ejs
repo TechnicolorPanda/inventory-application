@@ -5,14 +5,14 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1 class = 'title'><%= title %></h1>
+    <h1 class = 'title'><%= item.pattern %></h1>
     <div class = 'container-fluid'>
     <%- include('layout') -%>
     <div class = 'main-body'>
       <ul>
         <% if (item_list) { %>
           <% item_list.map(item => { %>
-            <li><a href= '<%= item.url %>' <%= item.pattern %></a>
+            <li><a href = '<%= item.url %>' <%= item.pattern %></a>
                 |  <%= item.category.name %>
                    <%= item.description %>
                    <%= item.price %>
