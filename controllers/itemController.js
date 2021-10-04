@@ -34,19 +34,17 @@ exports.item_list = function(req, res, next) {
 exports.item_detail = function(req, res, next) {
   async.parallel({
     item: function(callback) {
-        Item.findById(req.params.id)
-          .populate('description')
+      Item.findById(req.params.id)
           .populate('category')
-          .populate('price')
           .exec(callback);
     },
 
     item_patterns: function(callback) {
-        Item.find({ item: req.params.id })
-          .exec(callback);
+      Item.find({ item: req.params.id })
+        .exec(callback);
     },
 
-}, function(err, results) {
+  }, function(err, results) {
     if (err) { return next(err); }
     if (results.item==null) { // No results.
         var err = new Error('Pattern not found');
@@ -55,20 +53,18 @@ exports.item_detail = function(req, res, next) {
     }
     // Successful, so render
     res.render('item_detail', { 
-      title: results.item.pattern, 
+      title: 'Pattern Detail', 
       item: results.item, 
-      item_patterns: item.item_patterns 
+      item_patterns: results.item_patterns,
     } );
-});
+  });
 };
 
 exports.item_create_get = function(req, res, next) {
-
-  // Get all authors and genres, which we can use for adding to our book.
   async.parallel({
-      categories: function(callback) {
-          Category.find(callback);
-      },
+    categories: function(callback) {
+      Category.find(callback);
+    },
   }, function(err, results) {
       if (err) { return next(err); }
       res.render('item_form', { title: 'Create Pattern', categories: results.categories });

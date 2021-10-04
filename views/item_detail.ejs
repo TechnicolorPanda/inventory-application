@@ -10,12 +10,13 @@
     <%- include('layout') -%>
     <div class = 'main-body'>
       <ul>
-        <% if (item_list) { %>
-          <% item_list.map(item => { %>
-            <li><a href = '<%= item.url %>' <%= item.pattern %></a>
-                |  <%= item.category.name %>
-                   <%= item.description %>
-                   <%= item.price %>
+        <% if (item_patterns) { %>
+          <% item_patterns.map(item => { %>
+            <li><a href = '<%= item.url %>'><%= item.pattern %></a>
+              <p><%= item.category.name %></p>
+              <p><%= item.description %></p>
+              <p><%= item.price %></p>
+              <p><%= item.category %></p>
             </li>
           <% }) %>
         <% } else { %>
