@@ -24,7 +24,7 @@
           <legend>Description</legend>
           <input 
             type = 'text'
-            name="description" 
+            name = 'description'
             id="description._id" 
             maxlength="500"
             value = "<%= typeof category == 'undefined' ? '' : item.description %>"
@@ -42,13 +42,22 @@
         </fieldset>
         <fieldset>
           <legend>Category</legend>
-          <input
-            type = 'checkbox'
-            name = 'category'
-            id = 'category._id'
-            value = category._id
-            checked = 'category.checked'
-          </input>
+          <% if (categories) { %>
+            <% categories.map(category => { %>
+              <li>
+                <input
+                  type = 'checkbox'
+                  name = 'category'
+                  id = category._id
+                  value = category._id
+                />
+                <a href='<%= category.url %>'><%= category.name %></a>
+              </li>
+            <% }) %>
+          <% } else { %>
+            <li>There are no categories.</li>
+          <% } %>
+
         </fieldset>
         <button type = 'submit'>
           Submit
