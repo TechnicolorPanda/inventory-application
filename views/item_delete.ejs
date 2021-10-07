@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %>: <%= item.pattern %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1 class = 'title'><%= title %>: <%= item.pattern %></h1>
+    <div class = 'container-fluid'>
+    <%- include('layout') -%>
+      <p>Do you really want to delete this pattern?</p>
+      <form action = '' method = 'POST'>
+        <input
+          type = 'hidden'
+          name = 'id'
+          id = 'id'
+          value = '<%= item._id %>'
+          required
+        />
+      <button type = 'submit'>Delete</button>
+    </div>
+  </body>
+</html>
