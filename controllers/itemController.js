@@ -160,7 +160,7 @@ exports.item_delete_get = function(req, res) {
 
 // Handle item delete on POST.
 exports.item_delete_post = function(req, res) {
-  Item.findByIdAndRemove(req.body.item_id, (err) => {
+  Item.findByIdAndRemove(req.body.id, (err) => {
     if (err) {
       return next(err);
     }
