@@ -110,12 +110,38 @@ exports.category_create_post =  [
 
 // Display category delete form on GET.
 exports.category_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: category delete GET');
-};
+    
+  async.parallel({
+    item: function(callback) {
+        Item.findById(req.params.id).exec(callback)
+    },
+    category: function(callback) {
+      Category.findById(req.params.id).exec(callback)
+      }
+    
+  }, function(err, results) {
+    if (err) { return next(err); }
+    if (results.category==null) { // No results.
+        res.redirect('/catalog/categories');
+    }
+    // Successful, so render.
+    res.render(
+      'category_delete', 
+      { title: 'Delete Category', 
+      category: results.category, 
+    } );
+  });
+}
+
 
 // Handle category delete on POST.
 exports.category_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: category delete POST');
+  Category.findByIdAndRemove(req.body.id, (err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/catalog/categories');
+  });
 };
 
 // Display category update form on GET.
