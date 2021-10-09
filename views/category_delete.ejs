@@ -12,7 +12,7 @@
         <p>Please delete the following items before removing this category</p>
         <ul>
           <% category_items.forEach(item => { %>
-            <li><a href="<%= item.url %>"><%= item.name %></a></li>
+            <li><a href="<%= item.url %>"><%= item.pattern %></a></li>
           <% }) %>
         </ul>
         <% } else { %>

@@ -116,12 +116,10 @@ exports.category_delete_get = function(req, res, next) {
       Category.findById(req.params.id).exec(callback)
     },
     category_items: function(callback) {
-      Item.findById({ category: req.params.id }).exec(callback)
+      Item.find({ category: req.params.id }).exec(callback)
   },
     
   }, function(err, results) {
-
-    // TODO: err is returning
     if (err) { return next(err); }
     if (results.category==null) { // No results.
       let err = new Error("Category not found");
