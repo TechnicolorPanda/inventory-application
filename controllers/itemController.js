@@ -73,7 +73,7 @@ exports.item_create_get = function(req, res, next) {
 };
 
 exports.item_create_post = [
-  // Convert the genre to an array.
+  // Convert the category to an array.
   (req, res, next) => {
       if(!(req.body.category instanceof Array)){
           if(typeof req.body.genre ==='undefined')
@@ -106,23 +106,22 @@ exports.item_create_post = [
          });
 
       if (!errors.isEmpty()) {
-          // There are errors. Render form again with sanitized values/error messages.
 
-          // Get all authors and genres for form.
+        // TODO: categories is not defined
+
           async.parallel({
-              categories: function(callback) {
-                  Category.find(callback);
-              },
+            categories: function(callback) {
+              Category.find(callback);
+            },
           }, function(err, results) {
               if (err) { return next(err); }
 
-              // Mark our selected genres as checked.
-              for (let i = 0; i < results.categories.length; i++) {
-                  if (item.category.indexOf(results.genres[i]._id) > -1) {
-                      results.categories[i].checked='true';
-                  }
-              }
-              res.render('item_form', { title: 'Create Pattern', categories:results.categories, item: item, errors: errors.array() });
+              // for (let i = 0; i < results.categories.length; i++) {
+              //     if (item.categories.indexOf(results.categories[i]._id) > -1) {
+              //         results.categories[i].checked='true';
+              //     }
+              // }
+              res.render('item_form', { title: 'Create Pattern', categories: results.categories, item: item, errors: errors.array() });
           });
           return;
       }
@@ -169,11 +168,81 @@ exports.item_delete_post = function(req, res) {
 };
 
 // Display item update form on GET.
-exports.item_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item update GET');
+exports.item_update_get = function(req, res, next) {
+  async.parallel({
+    item: function(callback) {
+        Item.findById(req.params.id).exec(callback);
+    },
+  }, function(err, results) {
+      if (err) { return next(err); }
+      if (results.item == null) { 
+          var err = new Error('Item not found');
+          err.status = 404;
+          return next(err);
+      }
+      res.render('item_form', { title: 'Update Pattern', type: 'update', category: results.item });
+  });
 };
 
-// Handle item update on POST.
-exports.item_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Item update POST');
-};
+exports.item_update_post = [
+   (req, res, next) => {
+    if(!(req.body.category instanceof Array)){
+        if(typeof req.body.genre ==='undefined')
+        req.body.category = [];
+        else
+        req.body.category = new Array(req.body.category);
+    }
+    next();
+},
+
+// Validate and sanitise fields.
+body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
+body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
+body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
+body('category.*').escape(),
+
+// Process request after validation and sanitization.
+(req, res, next) => {
+
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Book object with escaped and trimmed data.
+    var item = new Item(
+      { pattern: req.body.pattern,
+        author: req.body.author,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category
+       });
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/error messages.
+
+        // Get all authors and genres for form.
+        async.parallel({
+          categories: function(callback) {
+            Category.find(callback);
+            },
+        }, function(err, results) {
+            if (err) { return next(err); }
+
+        // Mark our selected genres as checked.
+          for (let i = 0; i < results.categories.length; i++) {
+            if (item.category.indexOf(results.categories[i]._id) > -1) {
+              results.categories[i].checked='true';
+            }
+          }
+          res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: item, errors: errors.array() });
+        });
+        return;
+    }
+    else {
+        // Data from form is valid. Update the record.
+        Item.findByIdAndUpdate(req.params.id, item, {}, function (err, item) {
+            if (err) { return next(err); }
+              res.redirect(item.url);
+            });
+    }
+  }
+]

@@ -14,10 +14,10 @@
           <legend>Pattern</legend>
             <input
               type="text"
-              name="pattern"
-              id="pattern._id"
+              name="item"
+              id="item._id"
               maxlength="50"
-              value="<%= typeof category == 'undefined' ? '' : item.pattern %>"
+              value="<%= typeof item == 'undefined'? '' : item.pattern %>"
           />
         </fieldset>
         <fieldset>
@@ -27,7 +27,7 @@
             name = 'description'
             id="description._id" 
             maxlength="500"
-            value = "<%= typeof category == 'undefined' ? '' : item.description %>"
+            value = "<%= typeof item == 'undefined' ? '' : item.description %>"
           </input>
         </fieldset>
         <fieldset>
@@ -37,7 +37,7 @@
             name = 'price'
             id = 'price._id'
             maxlength = '10'
-            value = "<%= typeof category == 'undefined' ? '' : item.price %>"
+            value = "<%= typeof item == 'undefined' ? '' : item.price %>"
           />
         </fieldset>
 
@@ -50,7 +50,7 @@
                 type = 'checkbox'
                 name = 'category'
                 id = category._id
-                value = category._id
+                value = category.name
               />
               <a href='<%= category.url %>'><%= category.name %></a>
             </li>
