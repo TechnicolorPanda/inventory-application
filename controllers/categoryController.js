@@ -109,40 +109,69 @@ exports.category_create_post =  [
   ];
 
 // Display category delete form on GET.
-exports.category_delete_get = function(req, res) {
+exports.category_delete_get = function(req, res, next) {
     
   async.parallel({
-    item: function(callback) {
-        Item.findById(req.params.id).exec(callback)
-    },
     category: function(callback) {
       Category.findById(req.params.id).exec(callback)
-      }
+    },
+    category_items: function(callback) {
+      Item.findById({ category: req.params.id }).exec(callback)
+  },
     
   }, function(err, results) {
+
+    // TODO: err is returning
     if (err) { return next(err); }
     if (results.category==null) { // No results.
-        res.redirect('/catalog/categories');
+      let err = new Error("Category not found");
+      err.status = 404;
+      res.redirect('/catalog/categories');
     }
     // Successful, so render.
     res.render(
-      'category_delete', 
-      { title: 'Delete Category', 
-      category: results.category, 
-    } );
+      'category_delete', { 
+        title: 'Delete Category', 
+        category: results.category, 
+        category_items: results.category_items,
+      });
   });
 }
 
 
 // Handle category delete on POST.
 exports.category_delete_post = function(req, res) {
-  Category.findByIdAndRemove(req.body.id, (err) => {
-    if (err) {
-      return next(err);
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      category_items: function (callback) {
+        Item.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) return next(err);
+
+      if (results.category_items.length > 0) {
+        res.render("category_delete", {
+          title: "Delete Category: " + results.category.name,
+          category: results.category,
+          category_items: results.category_items,
+        });
+        return;
+      } else {
+        Category.findByIdAndRemove(req.body.id, (err) => {
+          if (err) {
+            return next(err);
+          }
+        res.redirect('/catalog/categories');
+        });
+      };
     }
-    res.redirect('/catalog/categories');
-  });
+  )
 };
+
 
 // Display category update form on GET.
 exports.category_update_get = function(req, res) {

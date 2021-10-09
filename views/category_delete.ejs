@@ -8,6 +8,14 @@
     <h1 class = 'title'><%= title %>: <%= category.name %></h1>
     <div class = 'container-fluid'>
     <%- include('layout') -%>
+    <% if (category_items.length > 0) { %>
+        <p>Please delete the following items before removing this category</p>
+        <ul>
+          <% category_items.forEach(item => { %>
+            <li><a href="<%= item.url %>"><%= item.name %></a></li>
+          <% }) %>
+        </ul>
+        <% } else { %>
       <p>Do you really want to delete this category?</p>
       <form action = '' method = 'POST'>
         <input
@@ -18,6 +26,7 @@
           required
         />
       <button type = 'submit'>Delete</button>
+    <% } %>
     </div>
   </body>
 </html>
