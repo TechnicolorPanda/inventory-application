@@ -104,7 +104,9 @@ exports.category_create_post =  [
   
              }
           });
+          res.redirect('/catalog/categories');
       }
+
     }
   ];
 

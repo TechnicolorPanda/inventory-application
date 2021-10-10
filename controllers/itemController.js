@@ -116,11 +116,11 @@ exports.item_create_post = [
           }, function(err, results) {
               if (err) { return next(err); }
 
-              // for (let i = 0; i < results.categories.length; i++) {
-              //     if (item.categories.indexOf(results.categories[i]._id) > -1) {
-              //         results.categories[i].checked='true';
-              //     }
-              // }
+              for (let i = 0; i < results.categories.length; i++) {
+                  if (item.categories.indexOf(results.categories[i]._id) > -1) {
+                      results.categories[i].checked='true';
+                  }
+              }
               res.render('item_form', { title: 'Create Pattern', categories: results.categories, item: item, errors: errors.array() });
           });
           return;
@@ -169,18 +169,35 @@ exports.item_delete_post = function(req, res) {
 
 // Display item update form on GET.
 exports.item_update_get = function(req, res, next) {
+
+  // TODO: display update form with correct category selected
+
+  (req, res, next) => {
+    if(!(req.body.category instanceof Array)){
+        if(typeof req.body.genre ==='undefined')
+        req.body.category = [];
+        else
+        req.body.category = new Array(req.body.category);
+    }
+    next();
+},
+
   async.parallel({
     item: function(callback) {
         Item.findById(req.params.id).exec(callback);
     },
+    categories: function(callback) {
+        Category.find(callback);
+        },
   }, function(err, results) {
       if (err) { return next(err); }
       if (results.item == null) { 
           var err = new Error('Item not found');
           err.status = 404;
           return next(err);
-      }
-      res.render('item_form', { title: 'Update Pattern', type: 'update', category: results.item });
+      } 
+      
+      res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: results.item });
   });
 };
 
@@ -219,7 +236,7 @@ body('category.*').escape(),
     if (!errors.isEmpty()) {
         // There are errors. Render form again with sanitized values/error messages.
 
-        // Get all authors and genres for form.
+        // Get all categories for form.
         async.parallel({
           categories: function(callback) {
             Category.find(callback);
@@ -227,12 +244,12 @@ body('category.*').escape(),
         }, function(err, results) {
             if (err) { return next(err); }
 
-        // Mark our selected genres as checked.
-          for (let i = 0; i < results.categories.length; i++) {
-            if (item.category.indexOf(results.categories[i]._id) > -1) {
+        // Mark our selected category as checked.
+        for (let i = 0; i < results.categories.length; i++) {
+          if (item.categories.indexOf(results.categories[i]._id) > -1) {
               results.categories[i].checked='true';
-            }
           }
+        }
           res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: item, errors: errors.array() });
         });
         return;
