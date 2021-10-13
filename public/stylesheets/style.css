@@ -34,8 +34,9 @@ ul {
 
 .main-body {
   display: block;
-  width: 80%;
   height: 100%;
+  align-items: center;
+  text-align: center;
 }
 
 hr {

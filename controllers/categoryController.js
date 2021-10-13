@@ -174,70 +174,35 @@ exports.category_delete_post = function(req, res) {
 
 
 exports.category_update_get = function(req, res, next) {
+  // Get all categories for form.
   async.parallel({
-    categories: function(callback) {
+    category: function(callback) {
       Category.findById(req.params.id).exec(callback);
-        },
+    },
   }, function(err, results) {
       if (err) { return next(err); }
-      if (results.item == null) { 
-          var err = new Error('Category not found');
-          err.status = 404;
-          return next(err);
-      } 
-      
-      res.render('category_form', { title: 'Update Category', categories: results.categories });
+      if (results.category == null) { 
+        var err = new Error('Category not found');
+        err.status = 404;
+        return next(err);
+    }
+
+  res.render('category_form', { title: 'Update Category', type: 'update', category: results.category });
   });
-};
+}
 
 exports.category_update_post = [
    (req, res, next) => {
-    if(!(req.body.category instanceof Array)){
-        if(typeof req.body.genre ==='undefined')
-        req.body.category = [];
-        else
-        req.body.category = new Array(req.body.category);
-    }
-    next();
-},
-
-// Validate and sanitise fields.
-body('category.*').escape(),
-body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
-
-// Process request after validation and sanitization.
-(req, res, next) => {
-
-    // Extract the validation errors from a request.
-    const errors = validationResult(req);
-
-    // Create a Book object with escaped and trimmed data.
     var category = new Category(
-      { category: req.body.category,
-        description: req.body.description
+      { name: req.body.name,
+        description: req.body.description,
+        _id: req.params.id 
        });
 
-    if (!errors.isEmpty()) {
-        // There are errors. Render form again with sanitized values/error messages.
-
-        // Get all categories for form.
-        async.parallel({
-          categories: function(callback) {
-            Category.find(callback);
-            },
-        }, function(err, results) {
-            if (err) { return next(err); }
-
-        res.render('category_form', { title: 'Update Category', category: results.category, errors: errors.array() });
-        });
-        return;
-    }
-    else {
         // Data from form is valid. Update the record.
-        Item.findByIdAndUpdate(req.params.id, item, {}, function (err, item) {
+        Category.findByIdAndUpdate(req.params.id, category, {}, function (err, category) {
             if (err) { return next(err); }
               res.redirect(category.url);
             });
     }
-  }
 ]
