@@ -169,97 +169,48 @@ exports.item_delete_post = function(req, res) {
 
 // Display item update form on GET.
 exports.item_update_get = function(req, res, next) {
-
-  // TODO: display update form with correct category selected
-
-  (req, res, next) => {
-    if(!(req.body.category instanceof Array)){
-        if(typeof req.body.genre ==='undefined')
-        req.body.category = [];
-        else
-        req.body.category = new Array(req.body.category);
-    }
-    next();
-},
-
+  // Get all categories for form.
   async.parallel({
     item: function(callback) {
-        Item.findById(req.params.id).exec(callback);
+      Item.findById(req.params.id).exec(callback);
+  },
+    category: function(callback) {
+      Category.findById(req.params.id).exec(callback);
     },
-    categories: function(callback) {
-        Category.find(callback);
-        },
   }, function(err, results) {
       if (err) { return next(err); }
       if (results.item == null) { 
-          var err = new Error('Item not found');
-          err.status = 404;
-          return next(err);
-      } 
-      
-      res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: results.item });
+        var err = new Error('Item not found');
+        err.status = 404;
+        return next(err);
+    }
+
+    res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: results.item });
   });
-};
+}
 
 exports.item_update_post = [
-   (req, res, next) => {
-    if(!(req.body.category instanceof Array)){
-        if(typeof req.body.genre ==='undefined')
-        req.body.category = [];
-        else
-        req.body.category = new Array(req.body.category);
-    }
-    next();
-},
 
-// Validate and sanitise fields.
-body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
-body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
-body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
-body('category.*').escape(),
+  // Validate and sanitise fields.
+  body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
+  body('category.*').escape(),
 
-// Process request after validation and sanitization.
-(req, res, next) => {
-
-    // Extract the validation errors from a request.
-    const errors = validationResult(req);
-
-    // Create a Book object with escaped and trimmed data.
+  (req, res, next) => {
     var item = new Item(
       { pattern: req.body.pattern,
-        author: req.body.author,
         description: req.body.description,
         price: req.body.price,
-        category: req.body.category
-       });
-
-    if (!errors.isEmpty()) {
-        // There are errors. Render form again with sanitized values/error messages.
-
-        // Get all categories for form.
-        async.parallel({
-          categories: function(callback) {
-            Category.find(callback);
-            },
-        }, function(err, results) {
-            if (err) { return next(err); }
-
-        // Mark our selected category as checked.
-        for (let i = 0; i < results.categories.length; i++) {
-          if (item.categories.indexOf(results.categories[i]._id) > -1) {
-              results.categories[i].checked='true';
-          }
-        }
-          res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: item, errors: errors.array() });
+        category: req.body.category,
+        _id: req.params.id,
         });
-        return;
-    }
-    else {
+
         // Data from form is valid. Update the record.
         Item.findByIdAndUpdate(req.params.id, item, {}, function (err, item) {
             if (err) { return next(err); }
               res.redirect(item.url);
-            });
-    }
+        }
+    )
   }
 ]
