@@ -73,22 +73,12 @@ exports.item_create_get = function(req, res, next) {
 };
 
 exports.item_create_post = [
-  // Convert the category to an array.
-  (req, res, next) => {
-      if(!(req.body.category instanceof Array)){
-          if(typeof req.body.genre ==='undefined')
-          req.body.category = [];
-          else
-          req.body.category = new Array(req.body.category);
-      }
-      next();
-  },
 
   // Validate and sanitise fields.
   body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
   body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
   body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
-  body('category.*').escape(),
+  body('category', 'Category must not be empty').trim().escape(),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -102,26 +92,25 @@ exports.item_create_post = [
           author: req.body.author,
           description: req.body.description,
           price: req.body.price,
-          category: req.body.category
+          category: req.body.category,
+          _id: req.params.id,
          });
 
       if (!errors.isEmpty()) {
 
-        // TODO: categories is not defined
-
           async.parallel({
             categories: function(callback) {
-              Category.find(callback);
+              Category.findById(req.params.id);
             },
           }, function(err, results) {
               if (err) { return next(err); }
-
-              for (let i = 0; i < results.categories.length; i++) {
-                  if (item.categories.indexOf(results.categories[i]._id) > -1) {
-                      results.categories[i].checked='true';
-                  }
-              }
-              res.render('item_form', { title: 'Create Pattern', categories: results.categories, item: item, errors: errors.array() });
+              res.render('item_form', { 
+                title: 'Create Pattern', 
+                type: 'create', 
+                categories: results.categories, 
+                item: item, 
+                errors: errors.array(),
+              });
           });
           return;
       }
