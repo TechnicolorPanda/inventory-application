@@ -162,9 +162,9 @@ exports.item_update_get = function(req, res, next) {
   async.parallel({
     item: function(callback) {
       Item.findById(req.params.id).exec(callback);
-  },
-    category: function(callback) {
-      Category.findById(req.params.id).exec(callback);
+    },
+    categories: function(callback) {
+      Category.find(callback);
     },
   }, function(err, results) {
       if (err) { return next(err); }
@@ -173,6 +173,7 @@ exports.item_update_get = function(req, res, next) {
         err.status = 404;
         return next(err);
     }
+    console.log(results.item);
 
     res.render('item_form', { title: 'Update Pattern', categories: results.categories, item: results.item });
   });
