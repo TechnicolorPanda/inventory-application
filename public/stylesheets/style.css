@@ -1,16 +1,26 @@
 body {
-  padding: 50px;
+  padding: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: lightblue;
 }
 
 .container-fluid {
-  display: block;
+  display: flex;
 }
 
 .title {
   height: 30px;
+  display: block;
+  margin-bottom: 40px;
+}
+
+h1 {
   align-items: center;
   text-align: center;
+  font-family: "Volkhov",serif;
+  color: #13383a;
+  font-size: 4em;
+
 }
 
 .link {
@@ -19,10 +29,12 @@ body {
 
 .col-sm-2 {
   display: block;
+  min-width: 20%;
+  max-width: 20%;
 }
 
 .sidebar-nav {
-  width: 20%;
+
   margin-top: 20px;
   padding: 0;
   list-style: none;
@@ -34,10 +46,13 @@ ul {
 }
 
 .main-body {
+  width: 100%;
   display: block;
   height: 100%;
   align-items: center;
-  text-align: center;
+  text-align: left;
+  padding-left: 10%;
+  padding-top: 20px;
 }
 
 hr {

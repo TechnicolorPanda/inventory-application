@@ -51,9 +51,11 @@
                 name = 'category'
                 id = category._id
                 value = "<%= typeof category == 'undefined' ? '' : category.id %>"
-              <% if ((category._id).toString() == (item.category).toString()) { %>
-                checked = true 
-              <% } %>
+                <% if (typeof item != 'undefined') { %>
+                  <% if ((category._id).toString() == (item.category).toString()) { %>
+                    checked = true 
+                  <% } %>
+                <% } %>
               />
               <a href='<%= category.url %>'><%= category.name %></a>
             </li>
