@@ -1,6 +1,6 @@
 body {
   padding: 10px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: lightblue;
 }
 
@@ -52,12 +52,19 @@ ul {
   align-items: center;
   text-align: left;
   padding-left: 10%;
-  padding-top: 20px;
+  padding-right: 10%;
+  padding-top: 30px;
 }
 
 hr {
   display: block;
   width: 100%;
+}
+
+button {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 3px;
 }
 
 
