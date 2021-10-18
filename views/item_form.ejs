@@ -9,7 +9,7 @@
     <div class = 'container-fluid'>
     <%- include('layout') -%>
     <div class = 'main-body'>
-      <form action = '' method = 'POST'>
+      <form action = '' method = 'POST' enctype = 'multipart/form-data'>
         <fieldset>
           <legend>Pattern</legend>
             <input
@@ -21,12 +21,16 @@
           />
         </fieldset>
         <fieldset>
+          <legend>Image</legend>
+          <input type = 'file' name = 'pattern_image' />
+        </fieldset>
+        <fieldset>
           <legend>Description</legend>
           <input 
             type = 'text'
             name = 'description'
-            id="description._id" 
-            maxlength="500"
+            id = "description._id" 
+            maxlength = "500"
             value = "<%= typeof item == 'undefined' ? '' : item.description %>"
           </input>
         </fieldset>

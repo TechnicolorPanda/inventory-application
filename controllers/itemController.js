@@ -1,8 +1,34 @@
 var Item = require('../models/item');
 var Category = require('../models/category');
 const { body,validationResult } = require('express-validator');
-
+var multer = require('multer');
 var async = require('async');
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/images/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 
 exports.index = function(req, res) {
 
@@ -73,55 +99,64 @@ exports.item_create_get = function(req, res, next) {
 };
 
 exports.item_create_post = [
+  // Adds product image to the req object
+  upload.single('pattern_image'), (req, res, next) => {
 
-  // Validate and sanitise fields.
-  body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
-  body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
-  body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
-  body('category', 'Category must not be empty').trim().escape(),
+    // Validate and sanitise fields.
+    body('pattern', 'Pattern name must not be empty.').trim().isLength({ min: 1 }).escape(),
+    body('description', 'Description must not be empty.').trim().isLength({ min: 1 }).escape(),
+    body('price', 'Price must not be empty').trim().isLength({ min: 1 }).escape(),
+    body('category', 'Category must not be empty').trim().escape(),
 
-  // Process request after validation and sanitization.
-  (req, res, next) => {
+    // Process request after validation and sanitization.
+    (req, res, next) => {
 
-      // Extract the validation errors from a request.
-      const errors = validationResult(req);
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
 
-      // Create a Book object with escaped and trimmed data.
-      var item = new Item(
-        { pattern: req.body.pattern,
-          author: req.body.author,
-          description: req.body.description,
-          price: req.body.price,
-          category: req.body.category,
-          _id: req.params.id,
-         });
-
-      if (!errors.isEmpty()) {
-
-          async.parallel({
-            categories: function(callback) {
-              Category.findById(req.params.id);
-            },
-          }, function(err, results) {
-              if (err) { return next(err); }
-              res.render('item_form', { 
-                title: 'Create Pattern', 
-                type: 'create', 
-                categories: results.categories, 
-                item: item, 
-                errors: errors.array(),
-              });
+        // Create a Book object with escaped and trimmed data.
+        var item = new Item(
+          { pattern: req.body.pattern,
+            author: req.body.author,
+            description: req.body.description,
+            price: req.body.price,
+            category: req.body.category,
+            _id: req.params.id,
           });
-          return;
-      }
-      else {
-          // Data from form is valid. Save pattern.
-          item.save(function (err) {
-              if (err) { return next(err); }
-                 //successful - redirect to new item record.
-                 res.redirect(item.url);
-              });
-      }
+
+        if (!errors.isEmpty()) {
+
+            async.parallel({
+              categories: function(callback) {
+                Category.findById(req.params.id);
+              },
+            }, function(err, results) {
+                if (err) { return next(err); }
+                res.render('item_form', { 
+                  title: 'Create Pattern', 
+                  type: 'create', 
+                  categories: results.categories, 
+                  item: item, 
+                  errors: errors.array(),
+                });
+            });
+            return;
+        }
+        else {
+            // Data from form is valid. Save pattern.
+            item.save(function (err) {
+                if (err) { return next(err); }
+                  //successful - redirect to new item record.
+                  res.redirect(item.url);
+                });
+        }
+
+        item.patternImage = req.file.path.substring(7);
+        item.save(function (err) {
+          if (err) { return next(err); }
+          res.redirect(item.url);
+      })
+    }
   }
 ];
 
