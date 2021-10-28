@@ -1,9 +1,11 @@
+const { fileLoader } = require('ejs');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ItemSchema = new Schema(
   {
     pattern: { type: String, required: true },
+    patternImage: {type: String, required: true},
     description: { type: String, required: true },
     price: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },

@@ -125,10 +125,9 @@ exports.item_create_post = [
           });
 
         if (!errors.isEmpty()) {
-
             async.parallel({
               categories: function(callback) {
-                Category.findById(req.params.id);
+                Category.find(req.params.id);
               },
             }, function(err, results) {
                 if (err) { return next(err); }
@@ -137,7 +136,7 @@ exports.item_create_post = [
                   type: 'create', 
                   categories: results.categories, 
                   item: item, 
-                  errors: errors.array(),
+                  errors: 'Image is required',
                 });
             });
             return;
